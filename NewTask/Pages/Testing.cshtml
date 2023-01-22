@@ -1,0 +1,80 @@
+﻿@page
+@model NewTask.Pages.TestingModel
+
+@{
+    string statusMessage = GetStatus();
+}
+
+@functions {
+    public string GetStatus()
+    {
+        List<string> status = new List<string> { "Отправлено", "Доставлено", "Ошибка отправки" };
+        Random rnd = new Random();
+        return status[rnd.Next(0, status.Count)];
+    }
+}
+<h1>Отправка Сообщений</h1>
+@if(@Model.checkUser != " ")
+{
+    <style>
+        .text{
+            color:red;
+        }
+    </style>
+    <h3 class="text">@Model.checkUser</h3>
+}
+<form class="row g-3" method="post">
+  <div class="col-md-12">
+    <label for="messageText" class="form-label">Текст сообщения</label>
+        <input type="text" name="message" class="form-control" id="messageText" required>
+  </div>
+    <div class="col-md-12">
+        <label for="number" class="form-label">Номер Получателя</label>
+        <input type="text" name="number" class="form-control" id="number" required>
+    </div>
+    <div class="col-md-12">
+    <label for="id" class="form-label"></label>
+        <input type="hidden" name="id" class="form-control" id="id" >
+    </div>
+    <div class="col-md-12">
+    <label for="UserName" class="form-label">Имя отправителя</label>
+        <input type="text" class="form-control" id="UserName">
+    </div>
+    <div class="col-md-12">
+        <input type="hidden" name="status" value="@statusMessage">
+    </div>
+    <br />
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Отправить</button>
+    </div>
+ </form>
+ <br />
+@if (Model.messages.Any())
+{
+    <table class="table table-success table-striped">
+        <thead>
+    <tr>
+      <th scope="col">Дата Получения</th>
+      <th scope="col">Тест Сообщения</th>
+      <th scope="col">Номер Получателя</th>
+      <th scope="col">Статус</th>
+    </tr>
+  </thead>
+  @foreach(var message in Model.messages){
+  <tbody>
+    <tr>
+      <td>@message.Date.ToShortDateString()</td>
+      <td>@message.Text</td>
+      <th scope="row">@message.UserPhone</th>
+      <td>@message.Status</td>
+    </tr>
+  </tbody>
+        }
+    </table>
+}
+else
+{
+    <h3>У вас нету отправленных сообщений</h3>
+}
+
+
